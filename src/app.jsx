@@ -1,49 +1,42 @@
 import { useState, useCallback, useEffect } from 'react';
+import axios from 'axios';
 import './app.css';
-import Searchform from './components/searchform';
-import Videolists from './components/videolists';
+import SearchForm from './components/search_form/search_form';
+import VideoLists from './components/video_list/video_list';
 
 const App = () => {
     const [isLoading, setLoading] = useState(true);
     const [videos, setVideos] = useState([]);
 
     const handleSearch = useCallback((item) => {
-        console.log(item);
+        // console.log(item);
+        setLoading(true);
+        const searchUrl = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=${item}&key=AAA`;
+        // key=AAA 에 발급받은 키 입력하기
+        getVideos(searchUrl);
     });
 
-    const getVideos = (url) => {
-        const requestOptions = {
-            method: 'GET',
-            redirect: 'follow',
-        };
-
-        const getvideolist = fetch(url, requestOptions)
-            .then((response) => response.json())
-            .then((result) => {
-                console.log('result.item', result.items);
-                return result.items;
-            })
-            .catch((error) => console.log('error', error));
-
-        console.log('getvideolist', getvideolist);
+    const getVideos = async (url) => {
+        const getvideolist = await axios.get(url);
+        // console.log('axios', getvideolist.data.items);
+        setVideos(getvideolist.data.items);
+        setLoading(false);
     };
 
     useEffect(() => {
-        console.log('mounted');
+        // console.log('mounted');
         getVideos(
             'https://youtube.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&maxResults=25&key=AAA'
             // key=AAA 에 발급받은 키 입력하기
         );
-        // console.log(getvediolist);
-        // setVideos(getvediolist);
     }, []);
 
     return (
         <>
-            {isLoading ? 'Loading' : 'we are ready'}
-            {/* <Searchform onSearch={handleSearch} /> */}
-            {/* <Videolists videos={videos} /> */}
+            <SearchForm onSearch={handleSearch} />
+            {isLoading ? 'Loading' : <VideoLists videos={videos} />}
         </>
     );
 };
+
 export default App;

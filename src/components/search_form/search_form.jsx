@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
-const Searchform = (props) => {
-    const formRef = React.createRef();
-    const inputRef = React.createRef();
+const SearchForm = (props) => {
+    const formRef = React.useRef();
+    const inputRef = React.useRef();
 
     const onSubmit = (event) => {
         event.preventDefault();
@@ -21,9 +21,11 @@ const Searchform = (props) => {
                 className='search_input'
                 placeholder='Search...'
             />
-            <button className='search_btn'>Search</button>
+            <button type='submit' className='search_btn'>
+                <img src='/images/search.png' alt='search' />
+            </button>
         </form>
     );
 };
 
-export default Searchform;
+export default SearchForm;
