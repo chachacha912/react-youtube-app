@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect } from 'react';
-import axios from 'axios';
 import './app.css';
 import SearchForm from './components/search_form/search_form';
 import VideoLists from './components/video_list/video_list';
@@ -11,24 +10,41 @@ const App = () => {
     const handleSearch = useCallback((item) => {
         // console.log(item);
         setLoading(true);
-        const searchUrl = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=${item}&key=AAA`;
-        // key=AAA 에 발급받은 키 입력하기
-        getVideos(searchUrl);
-    });
+        const requestOptions = {
+            method: 'GET',
+            redirect: 'follow',
+        };
 
-    const getVideos = async (url) => {
-        const getvideolist = await axios.get(url);
-        // console.log('axios', getvideolist.data.items);
-        setVideos(getvideolist.data.items);
-        setLoading(false);
-    };
+        // key=AAA 에 발급받은 키 입력하기
+        fetch(
+            `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=${item}&type=video&key=AAA`,
+            requestOptions
+        )
+            .then((response) => response.json())
+            .then((result) =>
+                result.items.map((item) => ({ ...item, id: item.id.videoId }))
+            )
+            .then((items) => setVideos(items))
+            .catch((error) => console.log('error', error))
+            .finally(setLoading(false));
+    });
 
     useEffect(() => {
         // console.log('mounted');
-        getVideos(
-            'https://youtube.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&maxResults=25&key=AAA'
-            // key=AAA 에 발급받은 키 입력하기
-        );
+        const requestOptions = {
+            method: 'GET',
+            redirect: 'follow',
+        };
+
+        // key=AAA 에 발급받은 키 입력하기
+        fetch(
+            'https://youtube.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&maxResults=25&key=AAA',
+            requestOptions
+        )
+            .then((response) => response.json())
+            .then((result) => setVideos(result.items))
+            .catch((error) => console.log('error', error))
+            .finally(setLoading(false));
     }, []);
 
     return (

@@ -5,9 +5,7 @@ const VideoLists = (props) => {
     return (
         <ul className='video_list'>
             {props.videos.map((video) => {
-                return (
-                    <Video key={video.id.videoId || video.id} video={video} />
-                );
+                return <Video key={video.id} video={video} />;
             })}
         </ul>
     );
