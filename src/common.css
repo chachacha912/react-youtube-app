@@ -48,6 +48,7 @@ img {vertical-align: top;}
 input {margin: 0; padding: 0; box-sizing: border-box; vertical-align: top;}
 input[type=radio] {vertical-align: middle;}
 select {cursor: pointer;}
+pre {white-space: pre-wrap;}
 
 /* common style */
 html, body {height: 100%; width: 100%; font-family: 'Noto Sans KR', sans-serif; color:#333; word-break:keep-all; font-size:16px;}

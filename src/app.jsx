@@ -1,12 +1,17 @@
 import { useState, useCallback, useEffect } from 'react';
 import './app.css';
 import SearchForm from './components/search_form/search_form';
+import VideoDetail from './components/video_detail/video_detail';
 import VideoLists from './components/video_list/video_list';
 
 const App = ({ youtube }) => {
     const [isLoading, setLoading] = useState(true);
+    const [selectedVideo, setSelectedVideo] = useState(null);
     const [videos, setVideos] = useState([]);
 
+    const selectVideo = (video) => {
+        setSelectedVideo(video);
+    };
     const handleSearch = useCallback((query) => {
         // console.log(query);
         setLoading(true);
@@ -27,7 +32,12 @@ const App = ({ youtube }) => {
     return (
         <>
             <SearchForm onSearch={handleSearch} />
-            {isLoading ? 'Loading' : <VideoLists videos={videos} />}
+            {selectedVideo && <VideoDetail video={selectedVideo} />}
+            {isLoading ? (
+                'Loading'
+            ) : (
+                <VideoLists videos={videos} onVideoClick={selectVideo} />
+            )}
         </>
     );
 };
